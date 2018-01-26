@@ -9,7 +9,7 @@ var {Todo} = require('./models/todo');
 
 
 var app = express();
-const port =process.env.PORT || 3000;
+const port =process.env.PORT || 3004;
 
 app.use(bodyParser.json());
 
@@ -45,6 +45,23 @@ app.get('/todos/:id',(req,res)=>{
       return res.status(404).send(console.log('todo not found'))
       };
 res.send({todo});
+  }
+).catch((e)=>{res.status(400).send()})
+
+});
+
+app.delete('/todos/:id',(req,res)=>{
+  var id = req.params.id;
+  if(!ObjectID.isValid(id)){
+      return res.status(404).send(console.log('ID not valid'));
+      };
+
+  Todo.findByIdAndRemove(id).then((todo)=>{
+
+    if (!todo) {
+      return res.status(404).send(console.log('todo not found'))
+      };
+res.status(200).send({todo});
   }
 ).catch((e)=>{res.status(400).send()})
 
